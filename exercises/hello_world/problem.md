@@ -1,27 +1,27 @@
-Write a program that prints the text "HELLO WORLD" to the console (stdout).
+Escribe un programa que imprima el texto "HELLO WORLD" en la consola (stdout).
 
 ----------------------------------------------------------------------
-## HINTS
+## PISTAS
 
-To make Node.js program, create a new file with a `.js` extension and start writing JavaScript! Execute your program by running it with the
-`node` command. e.g.:
+Para crear un programa con Node.js, crea un nuevo archivo con la extensión `.js` y comienza a escribir Javascript! Ejecuta tu programa utilizando el
+comando `node`. ej:
 
 ```sh
-$ node program.js
+$ node programa.js
 ```
 
-You can write to the console in the same way as in the browser:
+Puedes escribir en la consola de la misma manera que en el navegador:
 
 ```js
-console.log("text")
+console.log("texto")
 ```
 
-When you are done, you must run:
+Cuando hayas terminado, debes ejecutar:
 
 ```sh
 $ {appname} verify program.js
 ```
 
-to proceed. Your program will be tested, a report will be generated, and the lesson will be marked 'completed' if you are successful.
+para continuar. Tu programa será probado, se generará un reporte y la lección será marcada como `completada` si has tenido éxito.
 
 ----------------------------------------------------------------------
