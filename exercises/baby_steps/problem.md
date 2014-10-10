@@ -1,32 +1,32 @@
-Write a program that accepts one or more numbers as command-line arguments and prints the sum of those numbers to the console (stdout).
+Escribe un programa que acepte uno o mas números como argumentos de la linea de comandos, y escribe la suma de ellos en la consola (stdout).
 
 ----------------------------------------------------------------------
-## HINTS
+## PISTAS
 
-You can access command-line arguments via the global `process` object. The `process` object has an `argv` property which is an array containing the complete command-line. i.e. `process.argv`.
+Puedes acceder a los argumentos de la linea de comandos mediante el objeto global `process`. el objeto `process` contiene una propiedad llamada `argv`, la cual es un array que contiene la linea del comando completa. ej: `process.argv`.
 
-To get started, write a program that simply contains:
+Para comenzar, escribe un programa que contenga simplemente:
 
 ```js
 console.log(process.argv)
 ```
 
-Run it with `node program.js` and some numbers as arguments. e.g:
+Ejecútalo con el comando `node program.js` y algunos números como argumentos. ej:
 
 ```sh
-$ node program.js 1 2 3
+$ node programa.js 1 2 3
 ```
 
-In which case the output would be an array looking something like:
+En este caso, la salida debería ser un array como el siguiente:
 
 ```js
-[ 'node', '/path/to/your/program.js', '1', '2', '3' ]
+[ 'node', '/ruta/hacia/tu/programa.js', '1', '2', '3' ]
 ```
 
-You'll need to think about how to loop through the number arguments so  you can output just their sum. The first element of the process.argv array is always 'node', and the second element is always the path to your program.js file, so you need to start at the 3rd element (index 2), adding each item to the total until you reach the end of the array.
+Ahora necesitas pensar la manera de iterar entre estos argumentos y así devolver solo su suma. El primer elemento del array `process.argv` es siempre 'node', y el segundo es siempre la ruta hacia tu archivo 'programa.js', entonces necesitaras empezar a partir del 3er elemento (indice 2), sumando cada uno a el total hasta que alcances el final del array.
 
-Also be aware that all elements of `process.argv` are strings and you may need to *coerce* them into numbers. You can do this by prefixing the property with `+` or passing it to `Number()`. e.g. `+process.argv[2]` or `Number(process.argv[2])`.
+También ten en cuenta que todos los elementos de `process.argv` son cadenas de texto (strings), y necesitaras *convertirlas* a números. Puedes realizar esto anteponiendo la propiedad con el símbolo `+`, o a través del constructor `Number()`. ej: `+process.argv[2]` o `Number(process.argv[2])`.
 
-{appname} will be supplying arguments to your program when you run `{appname} verify program.js` so you don't need to supply them yourself. To test your program without verifying it, you can invoke it with `{appname} run program.js`. When you use `run`, you are invoking the test environment that {appname} sets up for each exercise.
+{appname} proveerá los argumentos númericos a tu programa cuando ejecutes `{appname} verify programa.js` entonces no necesitaras ingresarlos manualmente. Para probar tu programa sin verificarlo, puedes llamarlo a través de `{appname} run programa.js`. cuando utilizas el comando `run`, estas invocando el ambiente de pruebas que {appname} configura para cada ejercicio.
 
 ----------------------------------------------------------------------
