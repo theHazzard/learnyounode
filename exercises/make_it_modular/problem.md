@@ -1,56 +1,62 @@
-This problem is the same as the previous but introduces the concept of **modules**. You will need to create two files to solve this.
+Este problema es igual al anterior pero introduce el concepto de **modules** o módulos. Necesitaras crear 2 archivos para resolver este problema.
 
-Create a program that prints a list of files in a given directory, filtered by the extension of the files. The first argument is the directory name and the second argument is the extension filter. Print the list of files (one file per line) to the console. You **must** use asynchronous I/O.
+Crea un programa que imprima una lista de archivos en un directorio dado, filtrado por su extensión. El primer parámetro es el nombre del directorio y el segundo el filtro de extensión. Imprime la lista de archivos (uno por linea) en la consola. **Debes** usar métodos asincrónicos de E/S.
 
-You must write a *module* file to do most of the work. The module must *export* a single function that takes **three** arguments: the directory name, the filename extension string and a callback function, in that order. The filename extension argument must be the same as was passed to your program. i.e. don't turn it into a RegExp or prefix with "." or do anything else but pass it to your module where you can do what you need to make your filter work.
+Deberás escribir un *module*, o *modulo* para que este haga la mayor parte del trabajo. el modulo debe exportar '*export*' una única función que reciba **tres** parámetros: el nombre del directorio, la extensión a filtrar y una función callback, en ese orden.  El parámetro 'extensión' debe ser el mismo que le pasamos a nuestro programa. ej: no lo conviertas a *RegExp* o lo antepongas con "." etc. solo pásalo al module donde harás lo que necesites para que el filtro funcione.
 
-The callback function must be called using the idiomatic node(err, data) convention. This convention stipulates that unless there's an error, the first argument passed to the callback will be null, and the second will be your data. In this case, the data will be your filtered list of files, as an Array. If you receive an error, e.g. from your call to  `fs.readdir()`, the callback must be called with the error, and only the error, as the first argument.
+La funcion callback debe ser llamada utilizando la convencion (error, datos). Esta convencion estipula que, a menos que haya un error, el primer parametro pasado al callback debe ser null y el segundo deben ser tus datos. En este caso, los datos seran tu lista de archivos filtrada, en forma de un Array. Si recives algun error, ej: en tu llamada a `fs.readdir()`, el callback debe ser llamado solo con este error como primer parametro.
 
-You **must** not print directly to the console from your module file, only from your original program.
+**no debes** imprimir directamente a la consola desde tu modulo, solo desde el programa original.
 
-In the case of an error bubbling up to your original program file, simply check for it and print an informative message to the console.
+En el caso de que tu modulo envie un error a tu programa original, simplemente analizalo y imprime un mensaje informativo en la consola.
 
-These four things is the contract that your module must follow.
+Estas 4 cosas forman el contrato que tu modulo debe seguir.
 
-1. Export a single function that takes exactly the arguments described.
-2. Call the callback exactly once with an error or some data as described.
-3. Don't change anything else, like global variables or stdout.
-4. Handle all the errors that may occur and pass them to the callback.
+1. Exporta una unica funcion que recibe exactamente los argumentos descriptos.
+2. LLama la funcion exactamente una vez con un error o los datos, como se describio anteriormente.
+3. No cambies nada mas, como variables locales o stdout (impresion a consola)
+4. Manipula todos los errores que puedan ocurrir y pasalos a el callback.
 
-The benefit of having a contract is that your module can be used by anyone who expects this contract. So your module could be used by anyone else who does learnyounode, or the verifier, and just work.
+El beneficio de tener un contrato es que tu modulo puede ser utilizado por cualquier persona que tenga conocimiento del mismo. De esta manera tu modulo podria ser utilizado por cualquier persona que utilize learnyournode o el verificador y funcionaria sin problemas.
 
 ----------------------------------------------------------------------
-## HINTS
+## PISTAS
 
-Create a new module by creating a new file that just contains your directory reading and filtering function. To define a *single function* *export*, you assign your function to the `module.exports` object, overwriting what is already there:
+Crea un nuevo modulo creando un nuevo archivo que solo contenga tus funciones de lectura y filtrado. Para definir un *export* con una *unica funcion* debes asignar tu funcion al objeto `module.exports`, sobreescribiendo lo que hay alli:
 
 ```js
 module.exports = function (args) { /* ... */ }
 ```
 
-Or you can use a named function and assign the name.
-
-To use your new module in your original program file, use the `require()` call in the same way that you `require('fs')` to load the `fs` module. The only difference is that for local modules must be prefixed with './'. So, if your file is named mymodule.js then:
+O tambien puedes usar una funcion que no sea anonima, y asignar su nombre a `exports`:
 
 ```js
-var mymodule = require('./mymodule.js')
+var mifuncion = function (args) { /* ... */ }
+
+module.exports = mifuncion;
 ```
 
-The '.js' is optional here and you will often see it omitted.
+Para utilizar tu nuevo modulo en tu programa original, utiliza la funcion `require()` de la misma manera que lo hiciste con `fs` (`require('fs')`). La unica diferencia es que a tus modulos locales les debes anteponer './'. Entonces, si tu modulo se llama mimodulo.js:
 
-You now have the `module.exports` object in your module assigned to the `mymodule` variable. Since you are exporting a single function, `mymodule` is a function you can call!
+```js
+var mimodulo = require('./mimodulo.js')
+```
 
-Also keep in mind that it is idiomatic to check for errors and do early-returns within callback functions:
+La extension '.js' es opcional aqui, y normalmente veras que es omitida.
+
+Ahora tienes el objeto `module.exports` de tu modulo asignado a tu variable `mimodulo`. Ya que estas exportando una unica funcion, `mimodulo`es una funcion a la que puedes llamar!
+
+Tambien ten en mente que es conveniente hacer checkeos de errores y realizar retornos prematuros dentro de tus funciones callback:  
 
 ```js
 function bar (callback) {
   foo(function (err, data) {
     if (err)
-      return callback(err) // early return
+      return callback(err) // retorno prematuro
 
-    // ... no error, continue doing cool things with `data`
+    // ... no hubo error, continua haciendo cosas cool con tu `data`
 
-    // all went well, call callback with `null` for the error argument
+    // todo salio bien, llama el callback con `null` como tu argumento de error. 
 
     callback(null, data)
   })
