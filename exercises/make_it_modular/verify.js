@@ -16,7 +16,7 @@ function validateModule (modFile, callback) {
   try {
     mod = require(modFile)
   } catch (e) {
-    exercise.emit('fail', 'Error loading module: ' + e.message)
+    exercise.emit('fail', 'Error cargando modulo: ' + e.message)
     return callback(null, false)
   }
 
@@ -26,33 +26,33 @@ function validateModule (modFile, callback) {
   }
 
   function modFileError (txt) {
-    exercise.emit('fail', 'Your additional module file [' + path.basename(modFile) + '] ' + txt)
+    exercise.emit('fail', 'Tu archivo de modulo adicional [' + path.basename(modFile) + '] ' + txt)
     callback (null, false)
   }
 
-  //---- Check that our module file is `module.exports = function () {}`
+  //---- Revisa que tu archivo de modulo tenga el formato `module.exports = function () {}`
 
   if (typeof mod != 'function') {
     return modFileError(
-        'does not export a ' + chalk.bold('single function') + '.'
-      + 'You must use the `module.exports = function () {}` pattern.'
+        'no exporta una ' + chalk.bold('funcion simple') + '.'
+      + 'Debes utilizar el patrón `module.exports = function () {}`.'
     )
   } else {
-    exercise.emit('pass', 'Additional module file exports a single function')
+    exercise.emit('pass', 'El modulo adicional exporta una unica funcion')
   }
 
-  //---- Check that the function exported takes 3 arguments
+  //---- Revisa que la funcion exportada reciba 3 parametros
 
   if (mod.length < 3) {
     return modFileError(
-        'exports a function that takes fewer than ' + chalk.bold('three') + ' arguments.'
-      + 'You must accept a directory, a filter and a ' + chalk.bold('callback') + '.'
+        'exporta una funcion que recibe menos de ' + chalk.bold('tres') + ' parametros.'
+      + 'Debes aceptar un directorio, un filtro y un ' + chalk.bold('callback') + '.'
     )
   } else {
-    exercise.emit('pass', 'Additional module file exports a function that takes ' + mod.length + ' arguments')
+    exercise.emit('pass', 'El modulo acepta ' + mod.length + ' parametros')
   }
 
-  //---- Mock `fs.readdir` and check that an error bubbles back up through the cb 
+  //---- Simula `fs.readdir` para probar que se mande el error al callback 
 
   fs.$readdir = fs.readdir
   fs.readdir = function (dir, callback) {
@@ -61,8 +61,9 @@ function validateModule (modFile, callback) {
 
   function noerr () {
     modFileError(
-        'does not appear to pass back an error received from `fs.readdir()`'
+        'parece no estar enviando el error recibido de `fs.readdir()`'
       + 'Use the following idiomatic Node.js pattern inside your callback to `fs.readdir()`:'
+      + 'utiliza el siguiente patron dentro de tu callback para `fs.readdir()`:'
       + '\n\tif (err)\n\t  return callback(err)'
     )
   }
@@ -80,20 +81,20 @@ function validateModule (modFile, callback) {
   }
 
   if (callbackUsed)
-    exercise.emit('pass', 'Additional module file handles errors properly')
+    exercise.emit('pass', 'El modulo adicional maneja los errores correctamente')
 
-  //---- Check whether the callback is used at all
+  //---- Revisamos que el callback sea utilizado
 
   setTimeout(function () {
     if (returned)
       return
 
     if (!callbackUsed)
-      return modFileError('did not call the callback argument after an error from fs.readdir()')
+      return modFileError('no llama al callback luego de un error en fs.readdir()')
 
-    exercise.emit('pass', 'Additional module file handles callback argument')
+    exercise.emit('pass', 'El modulo adicional utiliza el callback')
 
-    // replace the mock readdir
+    // reemplaza nuevamente el readdir temporal
     fs.readdir = fs.$readdir
 
     callbackUsed = false
@@ -101,62 +102,62 @@ function validateModule (modFile, callback) {
       mod(dir, 'md', function (err, list) {
         if (err) {
           return modFileError(
-              'returned an error on its callback:'
+              'devolvio un error en el callback:'
             + '\n\t' + util.inspect(err)
           )
         }
 
-        //---- Check that we got the correct number of elements
+        //---- Revisamos que tengamos la cantidad correcta de elementos
         if (arguments.length < 2) {
           return modFileError(
-            'did not return two arguments on the callback function (expected `null` and an Array of filenames)'
+            'la funcion callback no devovlio dos parametros esperados (se esperaba `null` y un array de nombres de archivos)'
           )
         }
 
-        exercise.emit('pass', 'Additional module file returned two arguments on the callback function')
+        exercise.emit('pass', 'El modulo adicional devolvio los 2 elementos')
 
-        //---- Check that we got an Array as the second argument
+        //---- Revisamos que el segundo elemento sea un array
         if (!Array.isArray(list)) {
           return modFileError(
-            'did not return an Array object as the second argument of the callback'
+            'no se envio un Array como segundo parametro de la funcion callback'
           )
         }
 
-        exercise.emit('pass', 'Additional module file returned Array as second argument of the callback')
+        exercise.emit('pass', 'El modulo adicional devolvio un Array como segundo parametro')
 
-        //---- Check that we got the expected number of elements in the Array
+        //---- Revisamos que tengamos el numero correcto de elementos en nuestro array
         var exp = files.filter(function (f) { return (/\.md$/).test(f) })
           , i
 
         if (exp.length !== list.length) {
           return modFileError(
-            'did not return an Array with the correct number of elements as the second argument of the callback'
+            'El Array enviado como segundo parametro al callback no contenia la cantidad de elementos correctas'
           )
         }
 
-        exercise.emit('pass', 'Additional module file returned correct number of elements as the second argument of the callback')
+        exercise.emit('pass', 'El modulo adicional devolvio un Array conteniendo la cantidad correcta de elementos')
 
         callbackUsed = true
 
-        //---- Check that the elements are exactly the same as expected (ignoring order)
+        //---- Revisamos que los elementos sean los que esperabamos, ignorando el orden
         exp.sort()
         list.sort()
         for (i = 0; i < exp.length; i++) {
           if (list[i] !== exp[i]) {
             return modFileError(
-              'did not return the correct list of files as the second argument of the callback'
+              'no devolvio la lista correcta de elementos como segundo elemento de la funcion callback'
             )
           }
         }
 
-        exercise.emit('pass', 'Additional module file returned correct list of files as the second argument of the callback')
+        exercise.emit('pass', 'El modulo adicional devolvio la lista correcta de elementos')
 
         //WIN!!
         callback()
       })
     } catch (e) {
         return modFileError(
-            'threw an error:'
+            'dio un error:'
           + '\n\t' + util.inspect(e)
         )
     }
@@ -166,7 +167,7 @@ function validateModule (modFile, callback) {
         return
 
       if (!callbackUsed)
-        return modFileError('did not call the callback argument')
+        return modFileError('no llamo la funcion callback')
     }, 300)
   }, 300)
 }
