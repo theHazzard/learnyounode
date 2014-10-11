@@ -1,23 +1,23 @@
-Write a program that uses a single **asynchronous** filesystem operation to read a file and print the number of newlines it contains to the console (stdout), similar to running `cat file | wc -l`.
+Escribe un programa que utilice una operación **asincrónica** del sistema de archivos para leer un archivo y imprima el numero de lineas que contiene en la consola (stdout), similar a ejecutar `cat file | wc -l`.
 
-The full path to the file to read will be provided as the first command-line argument.
+La ruta completa al archivo a leer debe ser suministrada como el primer argumento en la linea de comandos.
 
 ----------------------------------------------------------------------
-# HINTS
+## PISTAS
 
-The solution to this problem is *almost* the same as the previous problem except you must now do it **the Node.js way**: asynchronous.
+La solución a este problema es **casi** la misma que en el problema anterior, excepto que ahora debes hacerlo de la **manera Node.js**: asincrónicamente.
 
-Instead of `fs.readFileSync()` you will want to use `fs.readFile()` and instead of using the return value of this method you need to collect the value from a callback function that you pass in as the second argument.
+En lugar de llamar a `fs.readFileSync()` querrás usar `fs.readFile()`, y en lugar de utilizar el valor retornado por este método necesitaras tomar el valor desde una **callback function** o función de retorno, la cual proporcionaras como segundo argumento.
 
-Remember that idiomatic Node.js callbacks normally have the signature:
+Recuerda que normalmente los **callbacks** en Node.js tienen la siguiente firma:
 
 ```js
 function callback (err, data) { /* ... */ }
 ```
 
-so you can check if an error occurred by checking whether the first argument is truthy. If there is no error, you should have your `Buffer` object as the second argument. As with `readFileSync()`, you can supply 'utf8' as the second argument and put the callback as the third argument and you will get a `String` instead of a `Buffer`.
+entonces puedes examinar si a ocurrido un error revisando si el primer argumento es verdadero. Si no a ocurrido un error, el segundo argumento debería ser tu objeto `Buffer`. Así como con el método `readFileSync()`, puedes llamar a `fs.readFile()` con 'utf8' como segundo argumento, y enviar el callback como tercer argumento y de esta manera recibir un `String` en lugar de un `Buffer`.
 
-Documentation on the `fs` module can be found by pointing your browser here:
+Puedes encontrar la documentación del modulo `fs` ingresando la siguiente dirección en tu navegador:
   {rootdir:/node_apidoc/fs.html}
 
 ----------------------------------------------------------------------
