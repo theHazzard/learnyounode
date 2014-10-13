@@ -152,7 +152,7 @@ function validateModule (modFile, callback) {
 
         exercise.emit('pass', 'El modulo adicional devolvio la lista correcta de elementos')
 
-        //WIN!!
+        //EXITO!!
         callback()
       })
     } catch (e) {
